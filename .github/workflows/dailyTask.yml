@@ -1,0 +1,28 @@
+name: easy-bilibili-daily-task
+on:
+  push:
+    branches: [ master ]
+  schedule:
+    # 定时任务，在每天的5点执行任务
+    - cron: '0 21 * * *'
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: use cache to speed up the time of build
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+      - name: execute the task
+        env:
+          sessdata: ${{ secrets.SESSDATA }}
+          userId: ${{ secrets.USERID }}
+          bill_jct: ${{ secrets.BILL_JCT }}
+          sckey: ${{ secrets.SCKEY }}
+        run: mvn compile exec:java -Dexec.mainClass="com.hhdd.Main" -Dexec.args="${sessdata} ${userId} ${bill_jct} ${sckey}"
