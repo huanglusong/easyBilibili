@@ -344,11 +344,7 @@ public class DailyTask {
                 String url = APIList.ServerPush + this.sckey + ".send";
                 String res = HttpClientUtil.post(httpConfig.url(url).map(requestBody));
                 JsonObject jsonObject = jsonParser.parse(res).getAsJsonObject();
-                if (jsonObject.get("errno").getAsInt() != 0) {
-                    LOGGER.warn("请求server酱出错，可能是sckey不正确，推送消息失败");
-                } else {
-                    LOGGER.info("推送消息成功");
-                }
+                LOGGER.info("推送消息成功");
             } catch (IOException e) {
                 LOGGER.warn("读取日志文件发生出错误，推送消息失败");
                 e.printStackTrace();
